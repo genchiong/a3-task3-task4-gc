@@ -68,7 +68,7 @@ ggplot(data = napl_purple,
   facet_wrap(~treatment)
 ```
 
-The distribution of urchin sizes for the Control and Annual groups appear to be normally distributed, with somewhat bell-shaped histograms and linear QQ-plots. For the Annual group, there appears to be a larger spread and there may be some positive skew which is reflected in the histogram and QQ-plot. Note that any concerns we may have with the histogram and QQ-plot can be assuaged, given that the sample sizes are greater than 30 and the Central Limit Theorem says that the distribution of means is going to be normal even if our population distribution were not normally distributed. 
+The distribution of urchin sizes for the Control and Annual groups appear to be normally distributed, with somewhat bell-shaped histograms and linear QQ-plots. For the Annual group, there appears to be a larger spread and a positive skew which is reflected in the histogram and QQ-plot. Note that any concerns we may have with the histogram and QQ-plot can be assuaged, given that the sample sizes are greater than 30 and the Central Limit Theorem says that the distribution of means is going to be normal even if our population distribution were not normally distributed. 
 
 ### c. Summary table of statistics for both Control and Annual treatments 
 
@@ -110,7 +110,7 @@ t.test(x = annual_sample, y = control_sample)
 
 ### e. Overall takeaways from t-test 
 
-Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) were only slightly larger than those in the Control treatment (3.73 $\pm$ 0.87 cm, n = 62), with a difference of 0.19 cm or 5% (values are mean $\pm$ 1 standard deviation; t(117.66) = 1.15, p = 0.25). The p-value of 0.25 means that there is a 25% probability of randomly selecting two samples from populations with the same mean that are this different by chance. These two samples very likely drawn from populations with the same mean sizes. 
+Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) were only slightly larger than those in the Control treatment (3.73 $\pm$ 0.87 cm, n = 62), with a difference of 0.19 cm or 5% (values are mean $\pm$ 1 standard deviation; t(117.66) = 1.15, p = 0.25). The p-value of 0.25 means that there is a 25% probability of randomly selecting two samples from populations with the same mean that are this different by chance. These two samples are very likely drawn from populations with the same mean sizes (i.e. the same population).
 
 ```{r}
 # Actual difference in mean urchin diameter of purple urchins between the Annual and Control groups
