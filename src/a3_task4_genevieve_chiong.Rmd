@@ -117,6 +117,6 @@ Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) we
 3.916667 - 3.725807
 
 # Percent difference in mean urchin diameter between the the Annual and Control groups
-# Note that I calculated this % difference by dividing the actual difference by the average of the two means 
+# Note that % difference was calculated by dividing the actual difference by the average of the two means 
 (3.916667 - 3.725807) / ((3.916667 + 3.725807) / 2) * 100
 ```
