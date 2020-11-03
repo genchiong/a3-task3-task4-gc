@@ -1,0 +1,115 @@
+---
+title: "a3_task4_genevieve_chiong"
+author: "Genevieve Chiong"
+date: "10/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(here)
+library(kableExtra)
+```
+
+## Summary
+
+In this R Markdown document, I will wrangle and visualize data to compare the mean size of purple urchins at one site along the Santa Barbara coast. I will look into exploring size comparisons between CONTROL (no giant kelp removal) or ANNUAL (annual kelp removal) sections of Naples Reef in January 2010. This will be done using data collected by Santa Barbara Coastal Long Term Ecological Research program divers between 2008-2020.  
+
+Data: Reed, D. 2020. SBC LTER: Reef: Long-term experiment: Kelp removal: Urchin size frequency distribution ver 20. Environmental Data Initiative. https://doi.org/10.6073/pasta/5a1e9ef03aa47bd2225c0bb98a02a63b. 
+
+### Attach the tidyverse, lubridate, janitor, here, and kableExtra packages. Read in the 'urchins.csv' data and clean column names. 
+
+Here, I read in the 'urchins.csv' data as a new stored object 'urchins'. Next I update the column names to lower_snake_case, saving it as a new stored object 'urchins_clean'. 
+
+```{r}
+urchins <- read_csv(here("data","urchins.csv"))
+
+urchins_clean <- urchins %>% 
+  clean_names()
+```
+
+## Compare the mean size of purple urchins in Control (no giant kelp removal) or Annual (annual kelp removal) sections of Naples Reef in January 2010 
+
+### a. Data wrangling 
+
+Here, I wrangle the 'urchins_clean' data to only include Naples Reef observations for purple urchins observed in January 2010. 
+
+```{r}
+napl_purple <- urchins_clean %>% 
+  filter(common_name == "Purple Urchin") %>% 
+  mutate(date = mdy(date)) %>% 
+  mutate(year_new = year(date)) %>% 
+  mutate(month_new = month(date)) %>% 
+  filter(site == "NAPL",
+         year_new == "2010",
+         month_new == "1")
+```
+
+### b. Visual data exploration with histograms and QQ-plots
+
+Here, I create histograms and QQ-plots for the size distribution for each of the treatments (Annual and Control) to look at and consider to assess normality. 
+
+```{r}
+ggplot(data = napl_purple, aes(x = size)) + 
+  geom_histogram(bins = 8) + 
+  facet_wrap(~treatment) +
+  labs(x = "Size (cm)",
+       y = "Number of Purple Urchins Observed")
+```
+
+```{r}
+ggplot(data = napl_purple, aes(sample = size)) +
+  geom_qq() +
+  facet_wrap(~treatment)
+```
+
+The distribution of urchin sizes for the Control and Annual groups appear to be normally distributed, with somewhat bell-shaped histograms and linear QQ-plots. For the Annual group, there may be some positive skew which is reflected in the histogram and QQ-plot. Note that any concerns we may have with the histogram and QQ-plot may be assuaged, given that the sample sizes are greater than 30 and the Central Limit Theorem says that the distribution of means is going to be normal even if our population distribution were not normally distributed. 
+
+### c. Summary table of statistics for both Control and Annual treatments 
+
+Here, I create a summary table of descriptive statistics for both group sizes, including the mean, median, standard deviation, and sample size. 
+
+```{r}
+napl_purple_stats <- napl_purple %>% 
+  group_by(treatment) %>% 
+  summarize(
+    mean_size = mean(size),
+    median_size = median(size),
+    sd_size = sd(size),
+    sample_size = n()) %>% 
+  kable(col.names = c("Treatment",
+                      "Mean Size (cm)",
+                      "Median Size (cm)",
+                      "Size Standard Deviation (cm)",
+                      "Sample Size (n)")) %>% 
+  kable_styling(full_width = FALSE)
+
+napl_purple_stats
+```
+
+### d. Perform a two-sample t-test to compare means between the Control and Annual groups
+
+Here, I create vectors containing size observations for each sample and use them to perform a two-sample t-test to compare means between the Control and Annual groups. 
+
+```{r}
+annual_sample <- napl_purple %>% 
+  filter(treatment == "ANNUAL") %>% 
+  pull(size)
+
+control_sample <- napl_purple %>% 
+  filter(treatment == "CONTROL") %>% 
+  pull(size)
+
+t.test(x = annual_sample, y = control_sample)
+```
+
+### e. Overall takeaways from t-test 
+
+Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) were only slightly larger than those in the Control treatment (3.73 $\pm$ 0.87 cm, n = 62), with a difference of 0.19 cm (values are mean $\pm$ 1 standard deviation; t(117.66) = 1.15, p = 0.25). The p-value of 0.25 means that there is a 25% probability of randomly selecting two samples from populations with the same mean that are this different by chance. These two samples very likely drawn from populations with the same mean sizes. 
+
+```{r}
+3.916667 - 3.725807
+```
