@@ -89,7 +89,7 @@ The purple urchin sizes are normally distributed around a central tendency (mean
 6.776489 - 4.469797
 
 # Percent difference in mean urchin diameter between the species 
-# Note that I calculated this % difference by dividing the actual difference by the average of the two means 
+# Note that the % difference was calculated by dividing the actual difference by the average of the two means 
 (6.776489 - 4.469797) / ((6.776489 + 4.469797) / 2) * 100
 ```
 
