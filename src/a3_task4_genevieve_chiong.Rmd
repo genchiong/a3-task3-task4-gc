@@ -20,7 +20,7 @@ In this R Markdown document, I will wrangle and visualize data to compare the me
 
 Data: Reed, D. 2020. SBC LTER: Reef: Long-term experiment: Kelp removal: Urchin size frequency distribution ver 20. Environmental Data Initiative. https://doi.org/10.6073/pasta/5a1e9ef03aa47bd2225c0bb98a02a63b. 
 
-### Attach the tidyverse, lubridate, janitor, here, and kableExtra packages. Read in the 'urchins.csv' data and clean column names. 
+#### Attach the tidyverse, lubridate, janitor, here, and kableExtra packages. Read in the 'urchins.csv' data and clean column names. 
 
 Here, I read in the 'urchins.csv' data as a new stored object 'urchins'. Next I update the column names to lower_snake_case, saving it as a new stored object 'urchins_clean'. 
 
@@ -38,7 +38,7 @@ urchins_clean <- urchins %>%
 Here, I wrangle the 'urchins_clean' data to only include Naples Reef observations for purple urchins observed in January 2010. 
 
 ```{r}
-napl_purple <- urchins_clean %>% 
+naples_purple <- urchins_clean %>% 
   filter(common_name == "Purple Urchin") %>% 
   mutate(date = mdy(date)) %>% 
   mutate(year_new = year(date)) %>% 
@@ -53,7 +53,7 @@ napl_purple <- urchins_clean %>%
 Here, I create histograms and QQ-plots for the size distribution for each of the treatments (Control and Annual) to look at and consider to assess normality. 
 
 ```{r}
-ggplot(data = napl_purple,
+ggplot(data = naples_purple,
        aes(x = size)) + 
   geom_histogram(bins = 8) + 
   facet_wrap(~treatment) +
@@ -62,7 +62,7 @@ ggplot(data = napl_purple,
 ```
 
 ```{r}
-ggplot(data = napl_purple,
+ggplot(data = naples_purple,
        aes(sample = size)) +
   geom_qq() +
   facet_wrap(~treatment)
@@ -75,7 +75,7 @@ The distribution of urchin sizes for the Control and Annual groups appear to be 
 Here, I create a summary table of descriptive statistics for both group sizes, including the mean, median, standard deviation, and sample size. 
 
 ```{r}
-napl_purple_stats <- napl_purple %>% 
+naples_purple_stats <- naples_purple %>% 
   group_by(treatment) %>% 
   summarize(
     mean_size = mean(size),
@@ -83,7 +83,7 @@ napl_purple_stats <- napl_purple %>%
     sd_size = sd(size),
     sample_size = n())
 
-kable(napl_purple_stats,
+kable(naples_purple_stats,
       col.names = c("Treatment",
                     "Mean Size (cm)",
                     "Median Size (cm)",
@@ -97,11 +97,11 @@ kable(napl_purple_stats,
 Here, I create vectors containing size observations for each sample and use them to perform a two-sample t-test to compare means between the Control and Annual groups. 
 
 ```{r}
-annual_sample <- napl_purple %>% 
+annual_sample <- naples_purple %>% 
   filter(treatment == "ANNUAL") %>% 
   pull(size)
 
-control_sample <- napl_purple %>% 
+control_sample <- naples_purple %>% 
   filter(treatment == "CONTROL") %>% 
   pull(size)
 
@@ -110,7 +110,7 @@ t.test(x = annual_sample, y = control_sample)
 
 ### e. Overall takeaways from t-test 
 
-Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) were only slightly larger than those in the Control treatment (3.73 $\pm$ 0.87 cm, n = 62), with a difference of 0.19 cm or 5% (values are mean $\pm$ 1 standard deviation; t(117.66) = 1.15, p = 0.25). The p-value of 0.25 means that there is a 25% probability of randomly selecting two samples from populations with the same mean that are this different by chance. These two samples are very likely drawn from populations with the same mean sizes (i.e. the same population).
+Mean purple urchin sizes in the Annual treatment (3.92 $\pm$ 0.97 cm, n = 60) were only slightly larger than those in the Control treatment (3.73 $\pm$ 0.87 cm, n = 62), with a difference of 0.19 cm or 5% (values are mean $\pm$ 1 standard deviation; t(117.66) = 1.15, p = 0.25). The p-value of 0.25 means that there is a 25% probability of randomly selecting two samples from populations with the same mean that are this different by chance. These two samples are very likely drawn from populations with the same mean sizes.
 
 ```{r}
 # Actual difference in mean urchin diameter of purple urchins between the Annual and Control groups
